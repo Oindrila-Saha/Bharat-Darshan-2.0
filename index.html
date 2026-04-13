@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bharat Darshan - India Travel Guide</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&amp;family=DM+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0;overflow:hidden;font-family:'DM Sans',sans-serif}
+.app-shell{width:100%;height:100%;max-width:430px;margin:0 auto;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.scroll-area::-webkit-scrollbar{display:none}
+.playfair{font-family:'Playfair Display',Georgia,serif}
+.state-card{transition:transform .25s ease,box-shadow .25s ease}
+.state-card:active{transform:scale(.97)}
+.tab-btn{transition:all .2s ease}
+.slide-in{animation:slideIn .35s ease forwards}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.slide-out{animation:slideOut .3s ease forwards}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(100%);opacity:0}}
+.fade-up{animation:fadeUp .4s ease forwards}
+@keyframes fadeUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.crowd-low{background:linear-gradient(135deg,#065f46,#047857)}
+.crowd-med{background:linear-gradient(135deg,#92400e,#b45309)}
+.crowd-high{background:linear-gradient(135deg,#991b1b,#dc2626)}
+.info-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.detail-section{padding:16px;margin-bottom:8px;border-radius:16px}
+.gradient-overlay{background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.05) 100%)}
+.search-bar{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pulse-dot{width:8px;height:8px;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.bottom-nav{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.weather-icon{font-size:28px}
+.budget-bar{height:6px;border-radius:3px;overflow:hidden}
+.budget-fill{height:100%;border-radius:3px;transition:width .6s ease}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-neutral-950">
+  <div class="app-shell" id="appShell"><!-- HOME SCREEN -->
+   <div id="homeScreen" style="display:flex;flex-direction:column;height:100%"><!-- Scrollable container with header inside -->
+    <div class="scroll-area" style="padding-bottom:80px;background:#0a0a0a"><!-- Status bar -->
+     <div style="padding:12px 20px 8px;display:flex;justify-content:space-between;align-items:center;background:#0a0a0a"><span style="font-size:12px;color:#a3a3a3;font-weight:600" id="clockDisplay">12:00</span>
+      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="wifi" style="width:14px;height:14px;color:#a3a3a3"></i> <i data-lucide="battery-full" style="width:14px;height:14px;color:#a3a3a3"></i>
+      </div>
+     </div><!-- Header -->
+     <div style="padding:16px 20px 12px;background:#0a0a0a">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+       <div>
+        <h1 class="playfair" id="appTitleEl" style="font-size:24px;font-weight:800;color:#f5f5f5;line-height:1.1">Bharat Darshan</h1>
+        <p style="font-size:12px;color:#f97316;font-weight:600;margin-top:2px">🇮🇳 Smart India Travel Guide</p>
+       </div>
+       <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center"><i data-lucide="compass" style="width:20px;height:20px;color:#fff"></i>
+       </div>
+      </div><!-- Search -->
+      <div class="search-bar" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06)"><i data-lucide="search" style="width:16px;height:16px;color:#737373"></i> <input id="searchInput" type="text" placeholder="Search states, places, food..." style="background:none;border:none;outline:none;color:#f5f5f5;font-size:14px;width:100%;font-family:'DM Sans',sans-serif" oninput="filterStates(this.value)">
+      </div>
+     </div><!-- Crowd ticker -->
+     <div style="padding:8px 20px;background:#0a0a0a">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15)">
+       <div class="pulse-dot" style="background:#f97316;flex-shrink:0"></div>
+       <p style="font-size:11px;color:#fdba74;font-weight:500" id="crowdTicker">Live: Goa beaches 🔴 High | Ladakh 🟢 Low | Kerala backwaters 🟡 Moderate</p>
+      </div>
+     </div><!-- Filter tabs -->
+     <div style="padding:10px 12px 6px;background:#0a0a0a;display:grid;grid-template-columns:repeat(4,1fr);gap:6px" id="filterTabs"><button class="tab-btn" onclick="filterRegion('all')" data-region="all" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:none;cursor:pointer;background:#f97316;color:#fff">All States</button> <button class="tab-btn" onclick="filterRegion('north')" data-region="north" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">North</button> <button class="tab-btn" onclick="filterRegion('south')" data-region="south" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">South</button> <button class="tab-btn" onclick="filterRegion('east')" data-region="east" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">East</button> <button class="tab-btn" onclick="filterRegion('west')" data-region="west" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">West</button> <button class="tab-btn" onclick="filterRegion('central')" data-region="central" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">Central</button> <button class="tab-btn" onclick="filterRegion('northeast')" data-region="northeast" style="padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12);background:transparent;color:#a3a3a3;cursor:pointer">Northeast</button>
+     </div><!-- State count -->
+     <div style="padding:6px 20px 4px;background:#0a0a0a">
+      <p style="font-size:11px;color:#525252" id="stateCount">Showing 28 states</p>
+     </div><!-- States list -->
+     <div id="statesList" style="padding:4px 16px;background:#0a0a0a">
+     </div>
+    </div><!-- Bottom nav -->
+    <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:10px 0 18px;background:rgba(10,10,10,.92);border-top:1px solid rgba(255,255,255,.06)"><button onclick="showHome()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="map" style="width:20px;height:20px;color:#f97316"></i> <span style="font-size:10px;color:#f97316;font-weight:600">Explore</span> </button> <button onclick="showFavorites()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="heart" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Saved</span> </button> <button onclick="showBudgetCalc()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="calculator" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Budget</span> </button> <button onclick="showTips()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="lightbulb" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Tips</span> </button>
+    </div>
+   </div><!-- DETAIL SCREEN -->
+   <div id="detailScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div class="scroll-area" id="detailContent" style="padding-bottom:30px"></div>
+   </div><!-- FAVORITES SCREEN -->
+   <div id="favScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div style="padding:50px 20px 14px;display:flex;align-items:center;gap:12px"><button onclick="showHome()" style="background:rgba(255,255,255,.08);border:none;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer"><i data-lucide="arrow-left" style="width:18px;height:18px;color:#f5f5f5"></i></button>
+     <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Saved States</h2>
+    </div>
+    <div class="scroll-area" id="favList" style="padding:8px 16px 80px"></div>
+   </div><!-- BUDGET CALCULATOR SCREEN -->
+   <div id="budgetScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div style="padding:50px 20px 14px;display:flex;align-items:center;gap:12px"><button onclick="showHome()" style="background:rgba(255,255,255,.08);border:none;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer"><i data-lucide="arrow-left" style="width:18px;height:18px;color:#f5f5f5"></i></button>
+     <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Trip Budget Planner</h2>
+    </div>
+    <div class="scroll-area" id="budgetContent" style="padding:8px 20px 80px"></div>
+   </div><!-- TIPS SCREEN -->
+   <div id="tipsScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div style="padding:50px 20px 14px;display:flex;align-items:center;gap:12px"><button onclick="showHome()" style="background:rgba(255,255,255,.08);border:none;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer"><i data-lucide="arrow-left" style="width:18px;height:18px;color:#f5f5f5"></i></button>
+     <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Smart Travel Tips</h2>
+    </div>
+    <div class="scroll-area" style="padding:8px 20px 80px" id="tipsContent"></div>
+   </div>
+  </div>
+  <script>
+// All 28 states data
+const states = [
+  {
+    id:1,name:"Rajasthan",region:"north",emoji:"🏜️",tagline:"Land of Kings & Deserts",
+    gradient:"linear-gradient(135deg,#d97706,#b45309)",
+    crowd:"high",crowdNote:"Jaipur & Udaipur extremely crowded Nov-Feb",
+    whyVisit:"Majestic forts, vibrant culture, Thar desert safaris, and unmatched royal heritage. Every corner tells a story of valor and grandeur.",
+    skip:"Skip Jaipur's Hawa Mahal during peak season (massive queues). Skip Pushkar during non-festival months. Avoid Jodhpur in May-June (45°C+).",
+    altPlaces:"Visit Bundi (hidden gem with stunning stepwells), Shekhawati (open-air art gallery), or Barmer for authentic desert culture without crowds.",
+    food:"Dal Baati Churma, Laal Maas, Ghevar, Ker Sangri, Pyaaz Kachori, Mirchi Vada. Street food paradise in Jodhpur's Sardar Market.",
+    culture:"Known for Ghoomar dance, puppet shows, turban tying traditions, and colorful festivals like Pushkar Camel Fair & Desert Festival.",
+    nature:"Thar Desert dunes, Ranthambore tigers, Mount Abu hill station, Keoladeo bird sanctuary, Sambhar Salt Lake.",
+    budget:{low:"₹800/day",mid:"₹2,500/day",high:"₹8,000+/day"},
+    weather:{summer:"38-45°C scorching",monsoon:"Moderate rain Jul-Sep",winter:"5-25°C ideal for tourism",best:"Oct-Mar"},
+    places:["Jaisalmer Fort","Udaipur Lakes","Ranthambore","Pushkar","Bundi Stepwells"]
+  },
+  {
+    id:2,name:"Kerala",region:"south",emoji:"🌴",tagline:"God's Own Country",
+    gradient:"linear-gradient(135deg,#059669,#047857)",
+    crowd:"med",crowdNote:"Alleppey & Munnar crowded Dec-Jan",
+    whyVisit:"Serene backwaters, lush tea plantations, Ayurvedic healing, pristine beaches, and rich spice heritage make it a tropical paradise.",
+    skip:"Skip Alleppey houseboats on weekends (overpriced & congested). Avoid Munnar during long weekends. Fort Kochi can be touristy.",
+    altPlaces:"Try Kumarakom for quieter backwaters, Wayanad for misty hills, or Bekal for untouched beaches.",
+    food:"Sadya (banana leaf feast), Karimeen Pollichathu, Appam & Stew, Puttu & Kadala, Malabar Biriyani, fresh seafood.",
+    culture:"Kathakali dance, Theyyam rituals, snake boat races (Vallam Kali), Onam harvest festival, temple arts.",
+    nature:"Backwater networks, Western Ghats rainforests, Periyar tiger reserve, Varkala cliffs, tea gardens of Munnar.",
+    budget:{low:"₹1,000/day",mid:"₹3,000/day",high:"₹10,000+/day"},
+    weather:{summer:"28-36°C humid",monsoon:"Heavy rain Jun-Sep",winter:"20-32°C pleasant",best:"Sep-Mar"},
+    places:["Alleppey Backwaters","Munnar","Wayanad","Varkala Beach","Periyar"]
+  },
+  {
+    id:3,name:"Goa",region:"west",emoji:"🏖️",tagline:"Pearl of the Orient",
+    gradient:"linear-gradient(135deg,#0891b2,#0e7490)",
+    crowd:"high",crowdNote:"North Goa extremely packed Dec-Jan, NYE insane",
+    whyVisit:"Perfect blend of Portuguese heritage, golden beaches, vibrant nightlife, stunning churches, and laid-back coastal vibes.",
+    skip:"Skip Baga & Calangute beaches (overcrowded, overrated). Avoid Anjuna flea market (touristy). Skip Dudhsagar in monsoon (closed).",
+    altPlaces:"Visit Agonda & Palolem in South Goa for serenity. Explore Divar Island, Chorao Island, or the spice plantations inland.",
+    food:"Fish Curry Rice, Pork Vindaloo, Bebinca, Prawn Balchão, Feni (cashew spirit), Ros Omelette, Xacuti.",
+    culture:"Portuguese-influenced architecture, Carnival celebrations, Goan tiatr (theater), Fado music heritage, church festivals.",
+    nature:"Pristine beaches, Salim Ali Bird Sanctuary, Mhadei wildlife, Dudhsagar Falls, mangrove forests, laterite plateaus.",
+    budget:{low:"₹1,200/day",mid:"₹3,500/day",high:"₹12,000+/day"},
+    weather:{summer:"30-36°C hot & humid",monsoon:"Heavy rain Jun-Sep",winter:"20-33°C perfect",best:"Nov-Feb"},
+    places:["Palolem Beach","Old Goa Churches","Dudhsagar Falls","Divar Island","Anjuna"]
+  },
+  {
+    id:4,name:"Himachal Pradesh",region:"north",emoji:"🏔️",tagline:"Dev Bhoomi - Land of Gods",
+    gradient:"linear-gradient(135deg,#1d4ed8,#2563eb)",
+    crowd:"high",crowdNote:"Manali & Shimla unbearable May-Jun & Dec",
+    whyVisit:"Snow-capped Himalayas, ancient temples, adventure sports paradise, apple orchards, and spiritual retreats in pristine mountain air.",
+    skip:"Skip Shimla Mall Road (overcrowded). Avoid Manali's Rohtang Pass without permit. Dharamshala main market is touristy.",
+    altPlaces:"Visit Spiti Valley for raw beauty, Tirthan Valley for trout fishing, Chitkul (last village on Indo-Tibet border), or Barot.",
+    food:"Siddu, Dham (festive platter), Madra, Babru, Chha Gosht, Mittha (sweet rice), Trout fish, Tibetan momos in Dharamshala.",
+    culture:"Kullu Dussehra (week-long), Tibetan Buddhist monasteries, Pahari miniature paintings, folk dances like Nati.",
+    nature:"Great Himalayan National Park (UNESCO), Spiti moonscape, Pin Valley snow leopards, Solang Valley, apple orchards.",
+    budget:{low:"₹900/day",mid:"₹2,800/day",high:"₹9,000+/day"},
+    weather:{summer:"15-30°C pleasant hills",monsoon:"Landslide risk Jul-Aug",winter:"-10 to 15°C snowfall",best:"Mar-Jun, Sep-Nov"},
+    places:["Spiti Valley","Tirthan Valley","Kasol","Bir Billing","Chitkul"]
+  },
+  {
+    id:5,name:"Tamil Nadu",region:"south",emoji:"🛕",tagline:"Land of Temples & Tradition",
+    gradient:"linear-gradient(135deg,#9333ea,#7c3aed)",
+    crowd:"med",crowdNote:"Temples crowded during festivals, Marina Beach always busy",
+    whyVisit:"UNESCO heritage temples, Dravidian architecture, classical arts, hill stations, and one of India's oldest living civilizations.",
+    skip:"Skip Marina Beach for swimming (dangerous currents). Avoid Ooty in peak season. Rameswaram Temple has very long queues.",
+    altPlaces:"Visit Chettinad for palatial mansions, Kolli Hills for hairpin adventure, or Tranquebar for Danish colonial history.",
+    food:"Chettinad Chicken, Filter Coffee, Dosa varieties, Idli Sambar, Pongal, Jigarthanda, Kothu Parotta, Banana Leaf Meals.",
+    culture:"Bharatanatyam dance, Carnatic music, Pongal harvest festival, Jallikattu bull sport, silk weaving in Kanchipuram.",
+    nature:"Nilgiri Biosphere, Kodaikanal hills, Gulf of Mannar marine park, Valparai rainforests, Yelagiri.",
+    budget:{low:"₹700/day",mid:"₹2,200/day",high:"₹7,000+/day"},
+    weather:{summer:"30-40°C hot",monsoon:"Oct-Dec (NE monsoon)",winter:"20-30°C mild",best:"Nov-Feb"},
+    places:["Meenakshi Temple","Mahabalipuram","Kodaikanal","Chettinad","Rameswaram"]
+  },
+  {
+    id:6,name:"Uttarakhand",region:"north",emoji:"⛰️",tagline:"Devbhoomi - Abode of Gods",
+    gradient:"linear-gradient(135deg,#16a34a,#15803d)",
+    crowd:"high",crowdNote:"Rishikesh & Mussoorie packed on weekends year-round",
+    whyVisit:"Sacred Char Dham pilgrimage, Ganges origin at Gaumukh, world-class trekking, yoga capital Rishikesh, and Jim Corbett tigers.",
+    skip:"Skip Mussoorie Mall Road (Delhi crowd overflow). Avoid Nainital on weekends. Haridwar Har Ki Pauri very congested at aarti.",
+    altPlaces:"Visit Munsiyari for Panchachuli views, Chopta (mini Switzerland), Binsar for solitude, or Khirsu for apple orchards.",
+    food:"Kafuli, Bal Mithai, Aloo ke Gutke, Chainsoo, Jhangora ki Kheer, Phaanu, Mandua ki Roti with ghee.",
+    culture:"Char Dham yatra tradition, Ganga aarti at Haridwar, Kumaoni folk art, Jaunsari tribal culture, yoga & meditation.",
+    nature:"Valley of Flowers (UNESCO), Nanda Devi, Jim Corbett National Park, Rajaji NP, Gangotri glacier.",
+    budget:{low:"₹800/day",mid:"₹2,500/day",high:"₹8,000+/day"},
+    weather:{summer:"15-35°C varies by altitude",monsoon:"Heavy Jul-Sep",winter:"-5 to 20°C snow in higher areas",best:"Mar-Jun, Sep-Nov"},
+    places:["Valley of Flowers","Chopta Tungnath","Rishikesh","Auli","Jim Corbett"]
+  },
+  {
+    id:7,name:"Karnataka",region:"south",emoji:"🏛️",tagline:"One State, Many Worlds",
+    gradient:"linear-gradient(135deg,#dc2626,#b91c1c)",
+    crowd:"med",crowdNote:"Coorg & Hampi peak season Dec-Jan",
+    whyVisit:"Ancient Hampi ruins, coffee plantations of Coorg, tech hub Bangalore, coastal temples, and diverse landscapes from beaches to hills.",
+    skip:"Skip Bangalore traffic chaos for tourism. Avoid Coorg on long weekends (traffic jams). Mysore Palace queues are brutal.",
+    altPlaces:"Visit Badami cave temples, Agumbe rainforests (Cherrapunji of South), Kudremukh trek, or Gokarna over Goa.",
+    food:"Bisi Bele Bath, Mysore Pak, Ragi Mudde, Neer Dosa, Mangalore Buns, Filter Coffee, Dharwad Peda, Udupi cuisine.",
+    culture:"Hampi Utsav, Mysore Dasara grandeur, Yakshagana theater, Carnatic music, sandalwood craft, silk weaving.",
+    nature:"Western Ghats biodiversity, Jog Falls, Bandipur tigers, Coorg coffee estates, Kabini river, Dandeli adventure.",
+    budget:{low:"₹800/day",mid:"₹2,500/day",high:"₹8,000+/day"},
+    weather:{summer:"25-38°C",monsoon:"Jun-Sep coastal heavy",winter:"15-28°C pleasant",best:"Oct-Feb"},
+    places:["Hampi","Coorg","Gokarna","Jog Falls","Bandipur"]
+  },
+  {
+    id:8,name:"West Bengal",region:"east",emoji:"🎭",tagline:"Cultural Capital of India",
+    gradient:"linear-gradient(135deg,#ea580c,#c2410c)",
+    crowd:"med",crowdNote:"Kolkata very crowded during Durga Puja",
+    whyVisit:"Intellectual & artistic heartland, Durga Puja UNESCO heritage, Darjeeling tea, Sundarbans tigers, and unmatched street food culture.",
+    skip:"Skip Victoria Memorial on weekends (long queues). Avoid Darjeeling Toy Train without advance booking. Digha beach is underwhelming.",
+    altPlaces:"Visit Shantiniketan for Tagore's legacy, Kalimpong for orchids, Murshidabad for Nawabi history, or Sandakphu for Everest views.",
+    food:"Rosogolla, Mishti Doi, Kosha Mangsho, Luchi-Alur Dom, Machher Jhol, Kathi Rolls, Phuchka, Sandesh.",
+    culture:"Durga Puja (UNESCO), Rabindra Sangeet, Bengali cinema, Baul folk music, terracotta art, literary festivals.",
+    nature:"Sundarbans mangroves (Royal Bengal Tiger), Darjeeling hills, Dooars forests, Bakkhali beach, Neora Valley.",
+    budget:{low:"₹600/day",mid:"₹2,000/day",high:"₹6,000+/day"},
+    weather:{summer:"30-40°C humid",monsoon:"Heavy Jun-Sep",winter:"10-25°C ideal",best:"Oct-Mar"},
+    places:["Sundarbans","Darjeeling","Shantiniketan","Kolkata Heritage","Sandakphu"]
+  },
+  {
+    id:9,name:"Maharashtra",region:"west",emoji:"🏰",tagline:"Gateway of India",
+    gradient:"linear-gradient(135deg,#7c3aed,#6d28d9)",
+    crowd:"high",crowdNote:"Mumbai always crowded, Lonavala packed on weekends",
+    whyVisit:"Ajanta-Ellora caves, Maratha forts, Mumbai's cosmopolitan energy, Konkan coast, and Bollywood's beating heart.",
+    skip:"Skip Lonavala-Khandala on weekends (traffic nightmare). Avoid Juhu Beach (dirty & crowded). Gateway of India area is very touristy.",
+    altPlaces:"Visit Malshej Ghat for flamingos, Tadoba for tigers (less crowded than others), Tarkarli for scuba, or Panhala Fort.",
+    food:"Vada Pav, Misal Pav, Puran Poli, Kolhapuri Tambda Rassa, Bombil Fry, Modak, Pav Bhaji, Solkadhi.",
+    culture:"Ganesh Chaturthi (massive!), Lavani dance, Warli tribal art, Marathi theater, Bollywood industry, Pandharpur Wari pilgrimage.",
+    nature:"Western Ghats (UNESCO), Tadoba tigers, Kaas Plateau flowers (Valley of Flowers of Maharashtra), Konkan coastline.",
+    budget:{low:"₹900/day",mid:"₹3,000/day",high:"₹10,000+/day"},
+    weather:{summer:"30-40°C",monsoon:"Very heavy Jun-Sep",winter:"15-32°C pleasant",best:"Oct-Mar"},
+    places:["Ajanta Ellora","Tadoba","Konkan Coast","Raigad Fort","Kaas Plateau"]
+  },
+  {
+    id:10,name:"Gujarat",region:"west",emoji:"🦁",tagline:"Land of Legends",
+    gradient:"linear-gradient(135deg,#0d9488,#0f766e)",
+    crowd:"med",crowdNote:"Rann of Kutch festival Dec-Feb very crowded",
+    whyVisit:"Last Asiatic lions, white desert of Kutch, step wells, Gir forest, vibrant textiles, and Gandhiji's homeland.",
+    skip:"Skip Rann Utsav if you dislike organized tourism. Avoid Somnath during Shivratri (extreme crowds). Statue of Unity weekends are packed.",
+    altPlaces:"Visit Mandvi beach, Polo Forest ruins, Saputara hill station, Modhera Sun Temple, or Dholavira (Harappan site).",
+    food:"Dhokla, Thepla, Undhiyu, Khandvi, Fafda-Jalebi, Dabeli, Sev Khamani, Gujarati Thali (sweet-salty combo).",
+    culture:"Navratri Garba (world's longest dance festival), Patola silk, Kutchi embroidery, Rann Utsav, kite festival.",
+    nature:"Gir National Park (Asiatic Lions), Rann of Kutch, Marine NP, Wild Ass Sanctuary, Blackbuck NP at Velavadar.",
+    budget:{low:"₹700/day",mid:"₹2,200/day",high:"₹7,000+/day"},
+    weather:{summer:"35-45°C very hot",monsoon:"Moderate Jun-Sep",winter:"10-30°C ideal",best:"Nov-Feb"},
+    places:["Rann of Kutch","Gir Forest","Modhera","Dholavira","Mandvi"]
+  },
+  {
+    id:11,name:"Punjab",region:"north",emoji:"🌾",tagline:"Land of Five Rivers",
+    gradient:"linear-gradient(135deg,#ca8a04,#a16207)",
+    crowd:"med",crowdNote:"Golden Temple always busy but well-managed",
+    whyVisit:"Golden Temple's spiritual aura, Wagah Border ceremony, incredible Punjabi hospitality, rich Sikh heritage, and best food in India.",
+    skip:"Skip Wagah Border in extreme summer (heat exhaustion risk). Avoid Amritsar during Baisakhi if you dislike mega-crowds.",
+    altPlaces:"Visit Patiala for royal heritage, Anandpur Sahib for Sikh history, or Harike wetland for bird watching.",
+    food:"Butter Chicken, Sarson ka Saag & Makki ki Roti, Amritsari Kulcha, Lassi, Chole Bhature, Tandoori cuisine, Pinni.",
+    culture:"Bhangra & Giddha dances, Sikh Gurdwara traditions, Langar (community kitchen), Lohri festival, Punjabi wedding grandeur.",
+    nature:"Harike Wetland (Ramsar site), Sukhna Lake, Shivalik foothills, agricultural landscapes, river systems.",
+    budget:{low:"₹700/day",mid:"₹2,000/day",high:"₹6,000+/day"},
+    weather:{summer:"35-45°C scorching",monsoon:"Moderate Jul-Sep",winter:"2-20°C foggy cold",best:"Oct-Mar"},
+    places:["Golden Temple","Wagah Border","Patiala","Anandpur Sahib","Jallianwala Bagh"]
+  },
+  {
+    id:12,name:"Meghalaya",region:"northeast",emoji:"🌧️",tagline:"Abode of Clouds",
+    gradient:"linear-gradient(135deg,#2563eb,#1d4ed8)",
+    crowd:"low",crowdNote:"Still relatively unexplored, growing popularity",
+    whyVisit:"Living root bridges, cleanest village in Asia (Mawlynnong), wettest place on Earth, crystal-clear rivers, and Khasi tribal culture.",
+    skip:"Skip Cherrapunji in peak monsoon (roads dangerous). Avoid Shillong on weekends (local traffic).",
+    altPlaces:"Visit Mawryngkhang bamboo trek, Siju Cave, Nongkhnum Island, or Dawki-Shnongpdeng for camping.",
+    food:"Jadoh (rice & pork), Tungrymbai (fermented soybean), Ki Kpu (rice beer), Doh Khlieh (pork salad), Nakham Bitchi.",
+    culture:"Khasi, Garo & Jaintia tribal traditions, matrilineal society, Nongkrem dance festival, archery betting culture.",
+    nature:"Living root bridges, Mawsmai caves, Dawki crystal river, Nohkalikai Falls, sacred forests, Balpakram NP.",
+    budget:{low:"₹800/day",mid:"₹2,200/day",high:"₹6,000+/day"},
+    weather:{summer:"15-25°C pleasant",monsoon:"Extreme rain Jun-Sep",winter:"5-18°C chilly",best:"Oct-May"},
+    places:["Living Root Bridges","Dawki River","Mawlynnong","Nohkalikai Falls","Shillong"]
+  },
+  {
+    id:13,name:"Sikkim",region:"northeast",emoji:"🏔️",tagline:"Mystic Mountain Kingdom",
+    gradient:"linear-gradient(135deg,#e11d48,#be123c)",
+    crowd:"low",crowdNote:"Limited tourism infrastructure keeps it uncrowded",
+    whyVisit:"Kanchenjunga views, Buddhist monasteries, organic state, pristine Himalayan landscapes, and unique Sikkimese culture.",
+    skip:"Skip Tsomgo Lake on weekends (convoy traffic). Avoid Gangtok MG Marg if seeking solitude. Nathula Pass needs advance permit.",
+    altPlaces:"Visit Zuluk zigzag road, Ravangla Buddha Park, Yuksom for Goechala trek, or Lachung village.",
+    food:"Thukpa, Momos, Gundruk, Sel Roti, Chhurpi (yak cheese), Phagshapa (pork with radish), Kinema, Tongba (millet beer).",
+    culture:"Tibetan Buddhist monasteries, Losar & Saga Dawa festivals, prayer flags, thangka paintings, Lepcha & Bhutia traditions.",
+    nature:"Kanchenjunga NP (UNESCO), Gurudongmar Lake, Yumthang Valley of Flowers, hot springs, rhododendron forests.",
+    budget:{low:"₹1,000/day",mid:"₹2,800/day",high:"₹8,000+/day"},
+    weather:{summer:"15-25°C pleasant",monsoon:"Heavy Jun-Sep (avoid)",winter:"-5 to 15°C cold",best:"Mar-Jun, Oct-Nov"},
+    places:["Gurudongmar Lake","Yumthang Valley","Pelling","Yuksom","Zuluk"]
+  },
+  {
+    id:14,name:"Madhya Pradesh",region:"central",emoji:"🐅",tagline:"Heart of Incredible India",
+    gradient:"linear-gradient(135deg,#65a30d,#4d7c0f)",
+    crowd:"low",crowdNote:"Except Khajuraho & major NPs, largely uncrowded",
+    whyVisit:"Best tiger sighting odds in India, UNESCO sites, tribal heartland, Khajuraho temples, and authentic untouched rural India.",
+    skip:"Skip Bhopal lakes (underwhelming). Avoid Pachmarhi on Diwali weekend. Khajuraho light show is skippable.",
+    altPlaces:"Visit Orchha over Khajuraho for similar architecture without crowds. Tamia for Patalkot tribal valley. Mandu monsoon magic.",
+    food:"Poha-Jalebi, Bhutte ka Kees, Malpua, Dal Bafla, Rogan Josh (Bhopal), Mawa Bati, Lavang Lata, Seekh Kebab.",
+    culture:"Tribal festivals, Gond & Baiga art, Khajuraho dance festival, Dussehra at Bastar, classical music traditions.",
+    nature:"Kanha, Bandhavgarh, Pench (Jungle Book inspiration) tiger reserves, Satpura, Panna, marble rocks at Bhedaghat.",
+    budget:{low:"₹600/day",mid:"₹2,000/day",high:"₹7,000+/day"},
+    weather:{summer:"35-45°C extreme",monsoon:"Good rain Jul-Sep",winter:"5-28°C perfect",best:"Oct-Mar"},
+    places:["Bandhavgarh Tigers","Orchha","Mandu","Bhedaghat","Panna NP"]
+  },
+  {
+    id:15,name:"Odisha",region:"east",emoji:"🛕",tagline:"Soul of India",
+    gradient:"linear-gradient(135deg,#0284c7,#0369a1)",
+    crowd:"low",crowdNote:"Except Puri Rath Yatra, largely peaceful",
+    whyVisit:"Konark Sun Temple UNESCO site, Jagannath Puri, pristine Chilika Lake, ancient Buddhist sites, and incredible tribal culture.",
+    skip:"Skip Puri beach for swimming (strong undercurrents). Avoid during Rath Yatra unless you want extreme crowds. Bhubaneswar temples have touts.",
+    altPlaces:"Visit Daringbadi (Odisha's Kashmir), Bhitarkanika mangroves for crocs, Simlipal tiger reserve, or Koraput tribal belt.",
+    food:"Dalma, Chhena Poda (cheesecake!), Pakhala Bhata (fermented rice), Machha Besara, Chhena Jhili, Rasgulla (disputed with Bengal!).",
+    culture:"Odissi dance, Pattachitra paintings, appliqué craft, Rath Yatra, Dhanu Yatra (world's largest open-air theater).",
+    nature:"Chilika Lake (dolphins & flamingos), Simlipal biosphere, Bhitarkanika, Olive Ridley turtle nesting at Gahirmatha.",
+    budget:{low:"₹500/day",mid:"₹1,800/day",high:"₹5,000+/day"},
+    weather:{summer:"30-40°C hot",monsoon:"Heavy Jun-Sep, cyclone risk",winter:"15-28°C nice",best:"Oct-Mar"},
+    places:["Konark Sun Temple","Chilika Lake","Bhitarkanika","Daringbadi","Simlipal"]
+  },
+  {
+    id:16,name:"Assam",region:"northeast",emoji:"🦏",tagline:"Gateway to Northeast",
+    gradient:"linear-gradient(135deg,#059669,#047857)",
+    crowd:"low",crowdNote:"Kaziranga gets busy Nov-Feb but manageable",
+    whyVisit:"One-horned rhinos, world's largest river island Majuli, tea gardens, Kamakhya temple, and vibrant Bihu celebrations.",
+    skip:"Skip Guwahati city for tourism (traffic chaos). Avoid Kaziranga in monsoon (park closed). Tezpur is underwhelming.",
+    altPlaces:"Visit Majuli island for Vaishnavite monasteries, Haflong (hill station), Manas NP, or Jatinga (bird mystery village).",
+    food:"Assam Laksa, Masor Tenga (sour fish), Pitha (rice cakes), Duck with Kumura, Khar, Bamboo Shoot dishes, Assam Tea.",
+    culture:"Bihu festival & dance, Sattriya dance (UNESCO), Vaishnavite neo-monasteries, Assamese silk (Muga & Pat), bamboo craft.",
+    nature:"Kaziranga (one-horned rhino), Manas NP, Majuli river island, Brahmaputra river, Gibbon Wildlife Sanctuary (hoolock gibbons).",
+    budget:{low:"₹600/day",mid:"₹2,000/day",high:"₹6,000+/day"},
+    weather:{summer:"25-35°C humid",monsoon:"Very heavy Jun-Sep, floods",winter:"8-25°C ideal",best:"Nov-Apr"},
+    places:["Kaziranga NP","Majuli Island","Manas NP","Kamakhya Temple","Tea Gardens"]
+  },
+  {
+    id:17,name:"Andhra Pradesh",region:"south",emoji:"🙏",tagline:"Kohinoor of India",
+    gradient:"linear-gradient(135deg,#d97706,#b45309)",
+    crowd:"high",crowdNote:"Tirupati world's most visited religious site",
+    whyVisit:"Tirupati - world's richest temple, Araku Valley beauty, Buddhist heritage at Amaravati, Vizag beaches, and Lepakshi architecture.",
+    skip:"Skip Tirupati without VIP darshan (6-12 hour queue). Avoid Vizag RK Beach (crowded & dirty). Srisailam is remote with poor roads.",
+    altPlaces:"Visit Araku Valley for tribal culture, Gandikota (Grand Canyon of India), Horsley Hills, or Konaseema backwaters.",
+    food:"Hyderabadi Biryani (Telangana influence), Gongura Pachadi, Pesarattu, Pulihora, Royyala Iguru (prawn curry), Pootharekulu.",
+    culture:"Kuchipudi dance, Kalamkari textile art, Tirupati traditions, Annamayya devotional music, Bommala Koluvu (doll festival).",
+    nature:"Araku Valley, Eastern Ghats, Gandikota gorge, Pulicat Lake (flamingos), Nallamala Hills, Horsley Hills.",
+    budget:{low:"₹600/day",mid:"₹2,000/day",high:"₹6,000+/day"},
+    weather:{summer:"35-45°C intense",monsoon:"Oct-Nov cyclone season",winter:"18-30°C good",best:"Nov-Feb"},
+    places:["Gandikota","Araku Valley","Vizag Coast","Lepakshi","Srisailam"]
+  },
+  {
+    id:18,name:"Telangana",region:"south",emoji:"🕌",tagline:"Heritage Meets Hi-Tech",
+    gradient:"linear-gradient(135deg,#a855f7,#9333ea)",
+    crowd:"med",crowdNote:"Hyderabad sights manageable except holidays",
+    whyVisit:"Charminar & Golconda fort, legendary Hyderabadi biryani, tech city with Nawabi soul, and emerging eco-tourism.",
+    skip:"Skip Charminar area on Fridays (prayer crowds). Avoid Hussain Sagar lake (polluted). Ramoji Film City is theme-park touristy.",
+    altPlaces:"Visit Ananthagiri Hills, Nagarjuna Sagar, Pochampally (ikat village), or Medak Cathedral (Asia's 2nd largest).",
+    food:"Hyderabadi Biryani, Haleem, Double Ka Meetha, Osmania Biscuits, Qubani Ka Meetha, Lukhmi, Irani Chai, Mirchi Ka Salan.",
+    culture:"Nawabi heritage, Deccani Urdu, Bonalu festival, Bathukamma flower festival, Bidri metalwork, Pochampally ikat weaving.",
+    nature:"Kawal Tiger Reserve, Amrabad Tiger Reserve, Pakhal Lake, Kinnerasani Wildlife, Nallamala forests.",
+    budget:{low:"₹600/day",mid:"₹2,000/day",high:"₹6,000+/day"},
+    weather:{summer:"35-42°C",monsoon:"Jun-Sep moderate",winter:"15-30°C pleasant",best:"Oct-Feb"},
+    places:["Golconda Fort","Charminar","Ananthagiri Hills","Pochampally","Nagarjuna Sagar"]
+  },
+  {
+    id:19,name:"Nagaland",region:"northeast",emoji:"🦅",tagline:"Land of Festivals",
+    gradient:"linear-gradient(135deg,#b91c1c,#991b1b)",
+    crowd:"low",crowdNote:"Only busy during Hornbill Festival (Dec)",
+    whyVisit:"Hornbill Festival (Festival of Festivals), warrior tribal culture, WWII history, untouched hills, and raw authentic experiences.",
+    skip:"Skip Dimapur (industrial, unattractive). Avoid remote areas without local guide. Inner Line Permit required.",
+    altPlaces:"Visit Dzukou Valley (Valley of Flowers of NE), Khonoma (first green village), Longwa (border village), Mon district headhunter tribes.",
+    food:"Smoked pork with bamboo shoot, Axone (fermented soybean), rice beer, Galho (rice porridge), boiled meats with Raja Mircha (Bhut Jolokia).",
+    culture:"Hornbill Festival, 16+ warrior tribes each with unique customs, Angami weaving, head-hunting history, Ao Moatsu festival.",
+    nature:"Dzukou Valley, Japfu Peak, Intanki NP, Saramati peak, blue mountains, pristine forests.",
+    budget:{low:"₹800/day",mid:"₹2,200/day",high:"₹5,000+/day"},
+    weather:{summer:"15-28°C pleasant",monsoon:"Heavy Jun-Sep",winter:"4-18°C cold",best:"Oct-May"},
+    places:["Hornbill Festival","Dzukou Valley","Khonoma Village","Longwa Village","Kohima War Cemetery"]
+  },
+  {
+    id:20,name:"Manipur",region:"northeast",emoji:"💃",tagline:"Jewel of India",
+    gradient:"linear-gradient(135deg,#ec4899,#db2777)",
+    crowd:"low",crowdNote:"Mostly off the tourist radar",
+    whyVisit:"Loktak Lake's floating islands, Sangai dancing deer, INA memorial, Manipuri dance, and unique floating market.",
+    skip:"Skip driving at night in remote areas. Avoid without Inner Line Permit. Imphal city traffic is chaotic.",
+    altPlaces:"Visit Ukhrul for Shirui Lily bloom, Tamenglong's Barak waterfall, or Dzukou Valley from Manipur side.",
+    food:"Eromba (mashed vegetables with fermented fish), Chamthong, Kangshoi, Singju (salad), Black Rice, Iromba.",
+    culture:"Manipuri Raas Leela dance, Thang-Ta martial art, Lai Haraoba festival, polo's birthplace, handloom weaving.",
+    nature:"Loktak Lake (floating lake), Keibul Lamjao NP (only floating NP), Shirui Kashong peak, Dzukou Valley.",
+    budget:{low:"₹700/day",mid:"₹1,800/day",high:"₹4,500+/day"},
+    weather:{summer:"18-30°C",monsoon:"Heavy Jun-Sep",winter:"2-20°C cold",best:"Oct-Mar"},
+    places:["Loktak Lake","Kangla Fort","Ukhrul","INA Memorial","Keibul Lamjao"]
+  },
+  {
+    id:21,name:"Tripura",region:"northeast",emoji:"🏰",tagline:"Land of 14 Gods",
+    gradient:"linear-gradient(135deg,#f59e0b,#d97706)",
+    crowd:"low",crowdNote:"Very few tourists, authentic experience guaranteed",
+    whyVisit:"Neermahal water palace, Ujjayanta Palace, rock carvings at Unakoti, and one of India's most underrated destinations.",
+    skip:"Skip Agartala for extended stays (limited attractions). Avoid monsoon season for hills.",
+    altPlaces:"Visit Unakoti rock carvings, Jampui Hills for orange festival, Pilak Buddhist ruins, or Dumboor Lake.",
+    food:"Mui Borok (traditional platter), Berma (fermented fish), Chakhwi (bamboo shoot), Wahan Mosdeng (chutney), Bhangui.",
+    culture:"Garia Puja, Ker festival, Tripuri tribal dances, bamboo & cane handicraft, Manipuri influences.",
+    nature:"Sepahijala Wildlife Sanctuary (spectacled monkeys), Trishna Wildlife, Dumboor Lake, rubber plantations, tea gardens.",
+    budget:{low:"₹500/day",mid:"₹1,500/day",high:"₹4,000+/day"},
+    weather:{summer:"25-35°C humid",monsoon:"Heavy Jun-Sep",winter:"10-25°C pleasant",best:"Oct-Mar"},
+    places:["Unakoti","Neermahal Palace","Jampui Hills","Ujjayanta Palace","Dumboor Lake"]
+  },
+  {
+    id:22,name:"Mizoram",region:"northeast",emoji:"🌿",tagline:"Land of Blue Mountains",
+    gradient:"linear-gradient(135deg,#14b8a6,#0d9488)",
+    crowd:"low",crowdNote:"One of India's least visited states",
+    whyVisit:"Rolling blue hills, vibrant Mizo culture, Phawngpui (Blue Mountain), cleanest state, and incredible community-based tourism.",
+    skip:"Skip Aizawl for nature experiences. Road conditions can be tough in monsoon.",
+    altPlaces:"Visit Reiek heritage village, Tam Dil lake, Champhai (rice bowl & Myanmar border views), Vantawng Falls.",
+    food:"Bai (boiled vegetables with pork), Sawhchiar (rice & meat stew), Koat Pitha, Zu (rice wine), bamboo shoot dishes.",
+    culture:"Chapchar Kut festival, Mizo bamboo dance (Cheraw), strong church community, traditional Puan shawls.",
+    nature:"Phawngpui Blue Mountain, Murlen NP, Dampa Tiger Reserve, Vantawng Falls (highest in Mizoram), Tam Dil.",
+    budget:{low:"₹700/day",mid:"₹1,800/day",high:"₹4,500+/day"},
+    weather:{summer:"18-28°C pleasant",monsoon:"Very heavy Jun-Sep",winter:"8-20°C cool",best:"Oct-Mar"},
+    places:["Phawngpui Peak","Reiek Village","Tam Dil","Vantawng Falls","Champhai"]
+  },
+  {
+    id:23,name:"Arunachal Pradesh",region:"northeast",emoji:"🌅",tagline:"Land of the Rising Sun",
+    gradient:"linear-gradient(135deg,#f97316,#ea580c)",
+    crowd:"low",crowdNote:"Remote, requires permits, naturally uncrowded",
+    whyVisit:"India's sunrise point, Tawang monastery (2nd largest Buddhist monastery in world), pristine valleys, 26 major tribes, and raw Himalayan beauty.",
+    skip:"Skip Itanagar (unexciting state capital). Avoid Sela Pass in extreme winter without proper vehicle. Permits needed - plan ahead.",
+    altPlaces:"Visit Ziro Valley (UNESCO tentative for Apatani culture), Mechuka (hidden Shangri-La), Sangti Valley, or Dirang.",
+    food:"Thukpa, Zan (corn porridge), Pika Pila (bamboo shoot pickle), Apong (rice beer), smoked fish, Lukter (chili cheese).",
+    culture:"26 major tribes, Tawang Monastery, Apatani nose-plug tradition, Losar festival, Sherdukpen dances, weaving traditions.",
+    nature:"Namdapha NP (4 big cats in one park!), Sela Pass, Nuranang Falls, Gorichen Peak, Pakhui Tiger Reserve.",
+    budget:{low:"₹1,000/day",mid:"₹2,500/day",high:"₹7,000+/day"},
+    weather:{summer:"15-28°C",monsoon:"Extreme rain Jun-Sep",winter:"-5 to 15°C freezing at altitude",best:"Mar-Jun, Sep-Nov"},
+    places:["Tawang Monastery","Ziro Valley","Mechuka","Sela Pass","Namdapha"]
+  },
+  {
+    id:24,name:"Chhattisgarh",region:"central",emoji:"🌳",tagline:"Full of Surprises",
+    gradient:"linear-gradient(135deg,#16a34a,#15803d)",
+    crowd:"low",crowdNote:"India's most underrated state for tourism",
+    whyVisit:"Chitrakote Falls (India's Niagara), ancient tribal culture, untouched forests, Buddhist ruins, and zero tourist crowds.",
+    skip:"Skip Raipur for tourism. Avoid Bastar region without local guidance. Some areas have Naxal advisories.",
+    altPlaces:"Visit Chitrakote Falls, Tirathgarh Falls, Kutumsar Cave, Bhoramdeo temples (Khajuraho of CG), or Barnawapara.",
+    food:"Chila (rice pancake), Fara (steamed dumplings), Angakar Roti, Bore Baasi (fermented rice), Aamat (tribal curry), Muthia.",
+    culture:"Bastar Dussehra (75-day festival!), Gond & Maria tribal art, Dhokra metal casting, Panthi & Raut Nacha dances.",
+    nature:"Kanger Valley NP, Indravati Tiger Reserve, Barnawapara WLS, Chitrakote Falls, Achanakmar biosphere.",
+    budget:{low:"₹500/day",mid:"₹1,500/day",high:"₹4,000+/day"},
+    weather:{summer:"35-45°C",monsoon:"Heavy Jun-Sep",winter:"10-28°C ideal",best:"Oct-Mar"},
+    places:["Chitrakote Falls","Bhoramdeo Temple","Kanger Valley","Tirathgarh Falls","Bastar"]
+  },
+  {
+    id:25,name:"Jharkhand",region:"east",emoji:"🌲",tagline:"Land of Forests",
+    gradient:"linear-gradient(135deg,#854d0e,#713f12)",
+    crowd:"low",crowdNote:"Barely any tourist crowds anywhere",
+    whyVisit:"Tribal heartland, stunning waterfalls, Parasnath Jain pilgrimage, Betla tiger reserve, and authentic rural India experience.",
+    skip:"Skip Ranchi city for tourism (industrial). Avoid remote areas without guides. Jamshedpur is purely industrial.",
+    altPlaces:"Visit Netarhat (Queen of Chotanagpur for sunrise), Hundru Falls, McCluskieganj (Anglo-Indian heritage), or Dalma Hills.",
+    food:"Dhuska, Litti Chokha, Rugra (mushroom curry), Handia (rice beer), Thekua, Pitha, Chilka Roti, Red Ant Chutney (tribal!).",
+    culture:"Sarhul (tree worship festival), Sohrai (harvest art), Chhau dance (UNESCO), Santhal & Munda tribal culture.",
+    nature:"Betla NP (elephants & tigers), Dalma Wildlife (elephants), Patratu Valley, Hundru Falls, Panchghagh Falls.",
+    budget:{low:"₹400/day",mid:"₹1,500/day",high:"₹4,000+/day"},
+    weather:{summer:"35-42°C",monsoon:"Good rain Jul-Sep",winter:"5-25°C pleasant",best:"Oct-Mar"},
+    places:["Netarhat","Betla NP","Hundru Falls","Parasnath","Dalma Hills"]
+  },
+  {
+    id:26,name:"Bihar",region:"east",emoji:"📿",tagline:"Cradle of Civilization",
+    gradient:"linear-gradient(135deg,#b45309,#92400e)",
+    crowd:"med",crowdNote:"Bodh Gaya crowded during Buddhist events",
+    whyVisit:"Bodh Gaya (Buddha's enlightenment), Nalanda (world's oldest university ruins), Rajgir's spiritual heritage, and Chhath Puja.",
+    skip:"Skip Patna for extended tourism. Avoid Bodh Gaya during peak Buddhist events if you dislike crowds. Infrastructure challenges outside main sites.",
+    altPlaces:"Visit Vikramshila university ruins, Valmiki NP (tigers near Nepal border), Sasaram tomb, or Kakolat Falls.",
+    food:"Litti Chokha, Sattu Paratha, Thekua, Malpua, Khaja, Tilkut, Balushahi, Dhuska, Chana Ghugni.",
+    culture:"Buddhist pilgrimage circuits, Chhath Puja (river worship), Madhubani painting art, Sonepur Mela (Asia's largest cattle fair).",
+    nature:"Valmiki NP (tigers), Kanwar Lake (Asia's largest oxbow lake), Vikramshila Gangetic Dolphin Sanctuary.",
+    budget:{low:"₹400/day",mid:"₹1,500/day",high:"₹4,000+/day"},
+    weather:{summer:"35-45°C brutal",monsoon:"Floods risk Jul-Sep",winter:"5-25°C good",best:"Oct-Mar"},
+    places:["Bodh Gaya","Nalanda Ruins","Rajgir","Vikramshila","Valmiki NP"]
+  },
+  {
+    id:27,name:"Haryana",region:"north",emoji:"🏏",tagline:"Land of Legends & Epics",
+    gradient:"linear-gradient(135deg,#475569,#334155)",
+    crowd:"low",crowdNote:"Not a typical tourist destination",
+    whyVisit:"Kurukshetra's Mahabharata connection, Sultanpur bird sanctuary, Pinjore Gardens, and Surajkund craft mela.",
+    skip:"Skip Gurugram for tourism (it's a corporate city). Avoid Panipat (historical but nothing to see). Limited tourist infrastructure.",
+    altPlaces:"Visit Morni Hills (only hill station), Sultanpur NP for birding, Pinjore Gardens, or Bhondsi for Aravalli walks.",
+    food:"Bajre ki Khichdi, Kachri ki Sabzi, Singri ki Sabzi, Malpua, Churma, Mixed Dals, Bathua Raita, Meethi Gajar.",
+    culture:"Haryanvi wrestling (Pehlwani), Saang folk theater, Ragini folk music, Surajkund International Craft Mela.",
+    nature:"Sultanpur NP (migratory birds), Morni Hills, Kalesar NP, Badkhal Lake, Damdama Lake, Aravalli foothills.",
+    budget:{low:"₹500/day",mid:"₹1,800/day",high:"₹5,000+/day"},
+    weather:{summer:"35-45°C extreme",monsoon:"Moderate Jul-Sep",winter:"2-20°C foggy",best:"Oct-Mar"},
+    places:["Kurukshetra","Morni Hills","Sultanpur NP","Pinjore Gardens","Surajkund"]
+  },
+  {
+    id:28,name:"Uttarakhand",region:"north",emoji:"⛰️",tagline:"Devbhoomi"
+  }
+];
+// Fix: Remove duplicate and add missing state
+states.pop(); // remove duplicate Uttarakhand
+states.push({
+  id:28,name:"Uttar Pradesh",region:"north",emoji:"🕌",tagline:"Heritage Heartland",
+  gradient:"linear-gradient(135deg,#6366f1,#4f46e5)",
+  crowd:"high",crowdNote:"Taj Mahal, Varanasi always extremely crowded",
+  whyVisit:"Taj Mahal (world wonder), spiritual Varanasi on the Ganges, Lucknow's Nawabi culture, and India's most historically dense state.",
+  skip:"Skip Taj Mahal on Fridays (closed). Avoid Varanasi ghats in monsoon (flooding). Agra beyond Taj is underwhelming. Allahabad Kumbh is extreme.",
+  altPlaces:"Visit Chitrakoot for spiritual peace, Sarnath (where Buddha first preached), Dudhwa NP for tigers, or Jhansi for Rani Lakshmibai history.",
+  food:"Lucknowi Biryani, Tunday Kebabs, Petha, Chaat varieties, Banarasi Paan, Bedmi Puri, Malaiyo (winter milk froth), Tehri.",
+  culture:"Ganga Aarti at Varanasi, Lucknow's tehzeeb (etiquette), Kathak dance, Ram Leela, Kumbh Mela, chikankari embroidery.",
+  nature:"Dudhwa NP (tigers & rhinos), Chambal ravines (gharials), Pilibhit Tiger Reserve, National Chambal Sanctuary.",
+  budget:{low:"₹500/day",mid:"₹2,000/day",high:"₹7,000+/day"},
+  weather:{summer:"35-47°C extreme heat",monsoon:"Heavy Jul-Sep",winter:"3-22°C foggy but pleasant",best:"Oct-Mar"},
+  places:["Taj Mahal","Varanasi Ghats","Lucknow Heritage","Sarnath","Dudhwa NP"]
+});
+
+let favorites = JSON.parse(localStorage.getItem('bd_favs') || '[]');
+let currentRegion = 'all';
+let searchTerm = '';
+
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clockDisplay').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+}
+updateClock();setInterval(updateClock,30000);
+
+function getCrowdClass(c){return c==='low'?'crowd-low':c==='med'?'crowd-med':'crowd-high'}
+function getCrowdLabel(c){return c==='low'?'🟢 Low Crowd':c==='med'?'🟡 Moderate':'🔴 High Crowd'}
+function getCrowdEmoji(c){return c==='low'?'🟢':c==='med'?'🟡':'🔴'}
+
+function isFav(id){return favorites.includes(id)}
+function toggleFav(id,e){
+  if(e)e.stopPropagation();
+  if(isFav(id))favorites=favorites.filter(f=>f!==id);
+  else favorites.push(id);
+  localStorage.setItem('bd_favs',JSON.stringify(favorites));
+  renderStates();
+}
+
+function getFilteredStates(){
+  let filtered=states.filter(s=>s.budget); // filter out any incomplete entries
+  if(currentRegion!=='all')filtered=filtered.filter(s=>s.region===currentRegion);
+  if(searchTerm){
+    const t=searchTerm.toLowerCase();
+    filtered=filtered.filter(s=>
+      s.name.toLowerCase().includes(t)||
+      s.tagline.toLowerCase().includes(t)||
+      s.food.toLowerCase().includes(t)||
+      s.places.some(p=>p.toLowerCase().includes(t))
+    );
+  }
+  return filtered;
+}function renderStates(){
+  const list=document.getElementById('statesList');
+  const filtered=getFilteredStates();
+  document.getElementById('stateCount').textContent=`Showing ${filtered.length} state${filtered.length!==1?'s':''}`;
+  list.innerHTML=filtered.map((s,i)=>`
+    <div class="state-card" onclick="openDetail(${s.id})" style="margin-bottom:12px;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;animation:fadeUp .4s ease ${i*0.04}s both">
+      <div style="height:160px;${s.gradient};position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:16px">
+        <div style="position:absolute;top:12px;right:12px;display:flex;gap:6px;align-items:center">
+          <span class="info-chip ${getCrowdClass(s.crowd)}" style="color:#fff">${getCrowdLabel(s.crowd)}</span>
+          <button onclick="toggleFav(${s.id},event)" style="width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:16px">${isFav(s.id)?'❤️':'🤍'}</span>
+          </button>
+        </div>
+        <div style="position:absolute;top:14px;left:16px;font-size:36px">${s.emoji}</div>
+        <h3 class="playfair" style="font-size:22px;font-weight:700;color:#fff;margin:0">${s.name}</h3>
+        <p style="font-size:12px;color:rgba(255,255,255,.8);margin:2px 0 0">${s.tagline}</p>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          ${s.places.slice(0,3).map(p=>`<span style="font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.2);color:#fff">${p}</span>`).join('')}
+        </div>
+      </div>
+      <div style="padding:12px 16px;background:rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:12px">
+          <span style="font-size:11px;color:#a3a3a3">🍽️ ${s.food.split(',')[0]}</span>
+          <span style="font-size:11px;color:#a3a3a3">💰 From ${s.budget.low}</span>
+        </div>
+        <i data-lucide="chevron-right" style="width:16px;height:16px;color:#525252"></i>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+function filterRegion(region){
+  currentRegion=region;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    if(b.dataset.region===region){b.style.background='#f97316';b.style.color='#fff';b.style.border='none';}
+    else{b.style.background='transparent';b.style.color='#a3a3a3';b.style.border='1px solid rgba(255,255,255,.12)';}
+  });
+  renderStates();
+}
+function filterStates(val){searchTerm=val;renderStates();}
+
+function openDetail(id){
+  const s=states.find(st=>st.id===id);
+  if(!s||!s.budget)return;
+  document.getElementById('homeScreen').style.display='none';
+  document.getElementById('favScreen').style.display='none';
+  document.getElementById('budgetScreen').style.display='none';
+  document.getElementById('tipsScreen').style.display='none';
+  const ds=document.getElementById('detailScreen');
+  ds.style.display='flex';
+  const dc=document.getElementById('detailContent');
+  dc.innerHTML=`
+    <div class="slide-in">
+    <!-- Hero -->
+    <div style="height:220px;${s.gradient};position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:20px">
+      <button onclick="closeDetail()" style="position:absolute;top:44px;left:16px;width:36px;height:36px;border-radius:12px;background:rgba(0,0,0,.3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <i data-lucide="arrow-left" style="width:18px;height:18px;color:#fff"></i>
+      </button>
+      <button onclick="toggleFav(${s.id})" style="position:absolute;top:44px;right:16px;width:36px;height:36px;border-radius:12px;background:rgba(0,0,0,.3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:18px">${isFav(s.id)?'❤️':'🤍'}</span>
+      </button>
+      <div style="font-size:48px;margin-bottom:4px">${s.emoji}</div>
+      <h2 class="playfair" style="font-size:28px;font-weight:800;color:#fff;margin:0">${s.name}</h2>
+      <p style="font-size:13px;color:rgba(255,255,255,.8);margin:4px 0 0">${s.tagline}</p>
+      <span class="info-chip ${getCrowdClass(s.crowd)}" style="color:#fff;margin-top:8px;align-self:flex-start">${getCrowdLabel(s.crowd)}</span>
+    </div>
+    <div style="padding:16px">
+    <!-- Crowd Alert -->
+    <div class="detail-section" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <i data-lucide="alert-triangle" style="width:18px;height:18px;color:#ef4444"></i>
+        <h4 style="font-size:14px;font-weight:700;color:#fca5a5;margin:0">Crowd Alert</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.5">${s.crowdNote}</p>
+    </div>
+
+    <!-- Why Visit -->
+    <div class="detail-section" style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">✨</span>
+        <h4 style="font-size:14px;font-weight:700;color:#fdba74;margin:0">Why Visit</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.whyVisit}</p>
+    </div>
+
+    <!-- Places to Skip -->
+    <div class="detail-section" style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.08)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">⚠️</span>
+        <h4 style="font-size:14px;font-weight:700;color:#fca5a5;margin:0">Places to Skip / Avoid</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.skip}</p>
+    </div>
+
+    <!-- Hidden Gems -->
+    <div class="detail-section" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">💎</span>
+        <h4 style="font-size:14px;font-weight:700;color:#86efac;margin:0">Hidden Gems Instead</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.altPlaces}</p>
+    </div>
+
+    <!-- Top Places -->
+    <div class="detail-section" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px">📍</span>
+        <h4 style="font-size:14px;font-weight:700;color:#f5f5f5;margin:0">Must Visit Places</h4>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${s.places.map(p=>`<span style="padding:6px 12px;border-radius:10px;background:rgba(249,115,22,.1);color:#fdba74;font-size:12px;font-weight:500">${p}</span>`).join('')}
+      </div>
+    </div>
+
+    <!-- Food -->
+    <div class="detail-section" style="background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">🍽️</span>
+        <h4 style="font-size:14px;font-weight:700;color:#fbbf24;margin:0">Food & Cuisine</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.food}</p>
+    </div>
+
+    <!-- Culture -->
+    <div class="detail-section" style="background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">🎭</span>
+        <h4 style="font-size:14px;font-weight:700;color:#c084fc;margin:0">Culture & Traditions</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.culture}</p>
+    </div>
+
+    <!-- Nature -->
+    <div class="detail-section" style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.08)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">🌿</span>
+        <h4 style="font-size:14px;font-weight:700;color:#4ade80;margin:0">Nature & Wildlife</h4>
+      </div>
+      <p style="font-size:13px;color:#d4d4d4;line-height:1.6">${s.nature}</p>
+    </div>
+
+    <!-- Weather -->
+    <div class="detail-section" style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px">🌤️</span>
+        <h4 style="font-size:14px;font-weight:700;color:#7dd3fc;margin:0">Weather Guide</h4>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.04)">
+          <p style="font-size:10px;color:#737373;margin:0;text-transform:uppercase;font-weight:600">Summer</p>
+          <p style="font-size:12px;color:#d4d4d4;margin:4px 0 0">☀️ ${s.weather.summer}</p>
+        </div>
+        <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.04)">
+          <p style="font-size:10px;color:#737373;margin:0;text-transform:uppercase;font-weight:600">Monsoon</p>
+          <p style="font-size:12px;color:#d4d4d4;margin:4px 0 0">🌧️ ${s.weather.monsoon}</p>
+        </div>
+        <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.04)">
+          <p style="font-size:10px;color:#737373;margin:0;text-transform:uppercase;font-weight:600">Winter</p>
+          <p style="font-size:12px;color:#d4d4d4;margin:4px 0 0">❄️ ${s.weather.winter}</p>
+        </div>
+        <div style="padding:10px;border-radius:10px;background:rgba(249,115,22,.1)">
+          <p style="font-size:10px;color:#f97316;margin:0;text-transform:uppercase;font-weight:600">Best Time</p>
+          <p style="font-size:12px;color:#fdba74;margin:4px 0 0;font-weight:600">🎯 ${s.weather.best}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget -->
+    <div class="detail-section" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span style="font-size:18px">💰</span>
+        <h4 style="font-size:14px;font-weight:700;color:#f5f5f5;margin:0">Daily Budget Estimate</h4>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:12px;color:#a3a3a3">🎒 Budget</span>
+            <span style="font-size:13px;color:#4ade80;font-weight:600">${s.budget.low}</span>
+          </div>
+          <div class="budget-bar" style="background:rgba(255,255,255,.08)"><div class="budget-fill" style="width:25%;background:#4ade80"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:12px;color:#a3a3a3">🧳 Mid-Range</span>
+            <span style="font-size:13px;color:#fbbf24;font-weight:600">${s.budget.mid}</span>
+          </div>
+          <div class="budget-bar" style="background:rgba(255,255,255,.08)"><div class="budget-fill" style="width:55%;background:#fbbf24"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:12px;color:#a3a3a3">✨ Luxury</span>
+            <span style="font-size:13px;color:#f97316;font-weight:600">${s.budget.high}</span>
+          </div>
+          <div class="budget-bar" style="background:rgba(255,255,255,.08)"><div class="budget-fill" style="width:90%;background:#f97316"></div></div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+    </div>
+  `;
+  dc.scrollTop=0;
+  lucide.createIcons();
+}
+
+function closeDetail(){
+  document.getElementById('detailScreen').style.display='none';
+  document.getElementById('homeScreen').style.display='flex';
+}
+
+function showHome(){
+  ['detailScreen','favScreen','budgetScreen','tipsScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('homeScreen').style.display='flex';
+}
+
+function showFavorites(){
+  ['homeScreen','detailScreen','budgetScreen','tipsScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('favScreen').style.display='flex';
+  const list=document.getElementById('favList');
+  const favStates=states.filter(s=>isFav(s.id)&&s.budget);
+  if(!favStates.length){
+    list.innerHTML=`<div style="text-align:center;padding:60px 20px"><span style="font-size:48px">💔</span><p style="color:#737373;margin-top:12px;font-size:14px">No saved states yet.<br>Tap the heart icon on any state to save it!</p></div>`;
+    return;
+  }
+  list.innerHTML=favStates.map(s=>`
+    <div class="state-card" onclick="openDetail(${s.id})" style="margin-bottom:10px;border-radius:14px;overflow:hidden;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)">
+      <div style="width:50px;height:50px;border-radius:12px;${s.gradient};display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${s.emoji}</div>
+      <div style="flex:1;min-width:0">
+        <h4 style="font-size:15px;font-weight:600;color:#f5f5f5;margin:0">${s.name}</h4>
+        <p style="font-size:11px;color:#737373;margin:2px 0 0">${s.tagline}</p>
+      </div>
+      <span style="font-size:11px;color:#737373">${getCrowdEmoji(s.crowd)}</span>
+    </div>
+  `).join('');
+}
+
+function showBudgetCalc(){
+  ['homeScreen','detailScreen','favScreen','tipsScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('budgetScreen').style.display='flex';
+  const bc=document.getElementById('budgetContent');
+  bc.innerHTML=`
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:#a3a3a3;display:block;margin-bottom:6px" for="bcState">Select State</label>
+      <select id="bcState" onchange="calcBudget()" style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:14px;font-family:'DM Sans',sans-serif">
+        ${states.filter(s=>s.budget).map(s=>`<option value="${s.id}">${s.emoji} ${s.name}</option>`).join('')}
+      </select>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:#a3a3a3;display:block;margin-bottom:6px" for="bcDays">Number of Days</label>
+      <input id="bcDays" type="number" value="3" min="1" max="30" onchange="calcBudget()" oninput="calcBudget()" style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:14px;font-family:'DM Sans',sans-serif">
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:#a3a3a3;display:block;margin-bottom:6px" for="bcType">Travel Style</label>
+      <select id="bcType" onchange="calcBudget()" style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:14px;font-family:'DM Sans',sans-serif">
+        <option value="low">🎒 Budget</option>
+        <option value="mid" selected>🧳 Mid-Range</option>
+        <option value="high">✨ Luxury</option>
+      </select>
+    </div>
+    <div id="budgetResult" style="padding:20px;border-radius:16px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15);text-align:center"></div>
+  `;
+  calcBudget();
+}
+
+function calcBudget(){
+  const sid=parseInt(document.getElementById('bcState').value);
+  const days=parseInt(document.getElementById('bcDays').value)||1;
+  const type=document.getElementById('bcType').value;
+  const s=states.find(st=>st.id===sid);
+  if(!s||!s.budget)return;
+  const daily=s.budget[type];
+  const num=parseInt(daily.replace(/[^\d]/g,''));
+  const total=num*days;
+  document.getElementById('budgetResult').innerHTML=`
+    <p style="font-size:12px;color:#a3a3a3;margin:0">${s.emoji} ${s.name} · ${days} day${days>1?'s':''} · ${type==='low'?'Budget':type==='mid'?'Mid-Range':'Luxury'}</p>
+    <p class="playfair" style="font-size:32px;font-weight:800;color:#f97316;margin:8px 0">₹${total.toLocaleString('en-IN')}</p>
+    <p style="font-size:11px;color:#737373;margin:0">${daily} per day × ${days} days</p>
+    <p style="font-size:11px;color:#525252;margin:8px 0 0">Best time: ${s.weather.best}</p>
+  `;
+}
+
+function showTips(){
+  ['homeScreen','detailScreen','favScreen','budgetScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('tipsScreen').style.display='flex';
+  document.getElementById('tipsContent').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+    ${[
+      {icon:'🕐',title:'Avoid Peak Seasons',desc:'Travel during shoulder seasons (Sep-Oct, Feb-Mar) for fewer crowds and better prices.'},
+      {icon:'🗓️',title:'Weekday Travel',desc:'Visit popular spots on Tuesday-Thursday. Weekends see 3-5x more visitors at major attractions.'},
+      {icon:'🌅',title:'Early Bird Advantage',desc:'Reach famous sites by 6-7 AM. Taj Mahal at sunrise with 50 people vs 5000 by 10 AM.'},
+      {icon:'💎',title:'Choose Alternatives',desc:'Every crowded destination has a quieter twin. Gokarna over Goa, Bundi over Jaipur, Chopta over Manali.'},
+      {icon:'📱',title:'Check Google Maps Live',desc:'Use "Popular Times" feature on Google Maps to see real-time crowd data at any place.'},
+      {icon:'🚂',title:'Book Trains Early',desc:'IRCTC opens bookings 120 days before. Tatkal opens 1 day before at 10 AM for AC, 11 AM for Sleeper.'},
+      {icon:'💉',title:'Health Precautions',desc:'Carry ORS packets, basic medicines. Get Hepatitis A vaccine if visiting rural areas. Drink only bottled water.'},
+      {icon:'🏠',title:'Stay Local',desc:'Homestays give authentic experiences at 50-70% less than hotels. Try Airbnb, StayOnSkill, or Zostel hostels.'},
+      {icon:'🗣️',title:'Learn Basic Phrases',desc:'Learn "Namaste", "Dhanyavaad" (thanks), and local greetings. Locals appreciate effort and help more.'},
+      {icon:'📋',title:'Permits Required',desc:'NE states need Inner Line Permit (ILP): Arunachal, Nagaland, Manipur, Mizoram. Apply online 2 weeks ahead.'}
+    ].map(t=>`
+      <div style="padding:14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:20px">${t.icon}</span>
+          <h4 style="font-size:14px;font-weight:600;color:#f5f5f5;margin:0">${t.title}</h4>
+        </div>
+        <p style="font-size:12px;color:#a3a3a3;line-height:1.5;margin:0">${t.desc}</p>
+      </div>
+    `).join('')}
+    </div>
+  `;
+}
+
+// Init
+renderStates();
+
+// Rotate crowd ticker
+const tickerMsgs=[
+  "Live: Goa beaches 🔴 High | Ladakh 🟢 Low | Kerala backwaters 🟡 Moderate",
+  "Live: Rajasthan forts 🔴 Packed | Meghalaya 🟢 Peaceful | Sikkim 🟢 Calm",
+  "Tip: Visit Hampi midweek for 80% fewer tourists than weekends",
+  "Live: Varanasi ghats 🔴 Crowded | Chhattisgarh 🟢 Empty | Assam 🟢 Quiet",
+  "Tip: Northeast India has the lowest tourist density — explore now!"
+];
+let tickerIdx=0;
+setInterval(()=>{tickerIdx=(tickerIdx+1)%tickerMsgs.length;document.getElementById('crowdTicker').textContent=tickerMsgs[tickerIdx];},5000);
+
+// Element SDK
+const defaultConfig={
+  app_title:'Bharat Darshan',
+  background_color:'#0a0a0a',
+  surface_color:'#1a1a1a',
+  text_color:'#f5f5f5',
+  primary_action_color:'#f97316',
+  secondary_action_color:'#a3a3a3',
+  font_family:'Playfair Display',
+  font_size:16
+};
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange:async(config)=>{
+    const t=config.app_title||defaultConfig.app_title;
+    const bg=config.background_color||defaultConfig.background_color;
+    const sf=config.surface_color||defaultConfig.surface_color;
+    const tx=config.text_color||defaultConfig.text_color;
+    const pa=config.primary_action_color||defaultConfig.primary_action_color;
+    const sa=config.secondary_action_color||defaultConfig.secondary_action_color;
+    const ff=config.font_family||defaultConfig.font_family;
+    const fs=config.font_size||defaultConfig.font_size;
+
+    document.getElementById('appTitleEl').textContent=t;
+    document.getElementById('appTitleEl').style.fontFamily=`${ff}, Georgia, serif`;
+    document.getElementById('appTitleEl').style.fontSize=`${fs*1.5}px`;
+    document.body.style.background=bg;
+    document.querySelectorAll('.app-shell > div').forEach(d=>d.style.background=bg);
+  },
+  mapToCapabilities:(config)=>({
+    recolorables:[
+      {get:()=>config.background_color||defaultConfig.background_color,set:v=>{config.background_color=v;window.elementSdk.setConfig({background_color:v})}},
+      {get:()=>config.surface_color||defaultConfig.surface_color,set:v=>{config.surface_color=v;window.elementSdk.setConfig({surface_color:v})}},
+      {get:()=>config.text_color||defaultConfig.text_color,set:v=>{config.text_color=v;window.elementSdk.setConfig({text_color:v})}},
+      {get:()=>config.primary_action_color||defaultConfig.primary_action_color,set:v=>{config.primary_action_color=v;window.elementSdk.setConfig({primary_action_color:v})}},
+      {get:()=>config.secondary_action_color||defaultConfig.secondary_action_color,set:v=>{config.secondary_action_color=v;window.elementSdk.setConfig({secondary_action_color:v})}}
+    ],
+    borderables:[],
+    fontEditable:{get:()=>config.font_family||defaultConfig.font_family,set:v=>{config.font_family=v;window.elementSdk.setConfig({font_family:v})}},
+    fontSizeable:{get:()=>config.font_size||defaultConfig.font_size,set:v=>{config.font_size=v;window.elementSdk.setConfig({font_size:v})}}
+  }),
+  mapToEditPanelValues:(config)=>new Map([
+    ["app_title",config.app_title||defaultConfig.app_title]
+  ])
+});
+
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ebaa40ba71d8c25',t:'MTc3NjA4NTA5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
