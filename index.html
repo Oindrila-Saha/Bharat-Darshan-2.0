@@ -37,6 +37,14 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;font-family:'DM Sans',s
 .weather-icon{font-size:28px}
 .budget-bar{height:6px;border-radius:3px;overflow:hidden}
 .budget-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.itinerary-card{position:relative;overflow:hidden;transition:all .3s ease}
+.itinerary-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(249,115,22,.15)}
+.trip-item{animation:slideIn .4s ease forwards;opacity:0}
+.delete-btn{opacity:0;transition:opacity .2s ease}
+.trip-item:hover .delete-btn{opacity:1}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase}
+.recommendation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:380px){.recommendation-grid{grid-template-columns:1fr}}
 </style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -75,7 +83,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;font-family:'DM Sans',s
      <div id="statesList" style="padding:4px 16px;background:#0a0a0a">
      </div>
     </div><!-- Bottom nav -->
-    <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:10px 0 18px;background:rgba(10,10,10,.92);border-top:1px solid rgba(255,255,255,.06)"><button onclick="showHome()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="map" style="width:20px;height:20px;color:#f97316"></i> <span style="font-size:10px;color:#f97316;font-weight:600">Explore</span> </button> <button onclick="showFavorites()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="heart" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Saved</span> </button> <button onclick="showBudgetCalc()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="calculator" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Budget</span> </button> <button onclick="showTips()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="lightbulb" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Tips</span> </button>
+    <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:10px 0 18px;background:rgba(10,10,10,.92);border-top:1px solid rgba(255,255,255,.06)"><button onclick="showHome()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="map" style="width:20px;height:20px;color:#f97316"></i> <span style="font-size:10px;color:#f97316;font-weight:600">Explore</span> </button> <button onclick="showFavorites()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="heart" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Saved</span> </button> <button onclick="showBudgetCalc()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="calculator" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Budget</span> </button> <button onclick="showTips()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="lightbulb" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Tips</span> </button> <button onclick="showItinerary()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="calendar" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Plan</span> </button> <button onclick="showChatbot()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer"> <i data-lucide="message-circle" style="width:20px;height:20px;color:#525252"></i> <span style="font-size:10px;color:#525252;font-weight:600">Chat</span> </button>
     </div>
    </div><!-- DETAIL SCREEN -->
    <div id="detailScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
@@ -98,6 +106,23 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;font-family:'DM Sans',s
      <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Smart Travel Tips</h2>
     </div>
     <div class="scroll-area" style="padding:8px 20px 80px" id="tipsContent"></div>
+   </div><!-- ITINERARY PLANNER SCREEN -->
+   <div id="itineraryScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div style="padding:50px 20px 14px;display:flex;align-items:center;gap:12px"><button onclick="showHome()" style="background:rgba(255,255,255,.08);border:none;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer"><i data-lucide="arrow-left" style="width:18px;height:18px;color:#f5f5f5"></i></button>
+     <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Trip Planner</h2>
+    </div>
+    <div class="scroll-area" style="padding:16px 20px 100px" id="itineraryContent"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 16px 20px;background:rgba(10,10,10,.95);border-top:1px solid rgba(255,255,255,.06)"><button onclick="openItineraryBuilder()" style="width:100%;padding:12px;border-radius:12px;background:#f97316;border:none;cursor:pointer;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px"><i data-lucide="plus" style="width:18px;height:18px"></i>Create New Trip</button>
+    </div>
+   </div><!-- CHATBOT SCREEN -->
+   <div id="chatbotScreen" style="display:none;flex-direction:column;height:100%;background:#0a0a0a">
+    <div style="padding:50px 20px 14px;display:flex;align-items:center;gap:12px"><button onclick="showHome()" style="background:rgba(255,255,255,.08);border:none;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer"><i data-lucide="arrow-left" style="width:18px;height:18px;color:#f5f5f5"></i></button>
+     <h2 class="playfair" style="font-size:22px;font-weight:700;color:#f5f5f5">Travel Assistant</h2>
+    </div>
+    <div class="scroll-area" id="chatMessages" style="padding:12px 16px 100px;display:flex;flex-direction:column;gap:10px"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 16px 20px;background:rgba(10,10,10,.95);border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px">
+     <input id="chatInput" type="text" placeholder="Ask me about travel..." style="flex:1;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:13px;font-family:'DM Sans',sans-serif" onkeypress="if(event.key==='Enter'){sendMessage()}"> <button onclick="sendMessage()" style="width:36px;height:36px;border-radius:12px;background:#f97316;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i data-lucide="send" style="width:18px;height:18px;color:#fff"></i></button>
+    </div>
    </div>
   </div>
   <script>
@@ -538,7 +563,9 @@ function getFilteredStates(){
     );
   }
   return filtered;
-}function renderStates(){
+}
+
+function renderStates(){
   const list=document.getElementById('statesList');
   const filtered=getFilteredStates();
   document.getElementById('stateCount').textContent=`Showing ${filtered.length} state${filtered.length!==1?'s':''}`;
@@ -748,9 +775,8 @@ function closeDetail(){
   document.getElementById('detailScreen').style.display='none';
   document.getElementById('homeScreen').style.display='flex';
 }
-
 function showHome(){
-  ['detailScreen','favScreen','budgetScreen','tipsScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  ['detailScreen','favScreen','budgetScreen','tipsScreen','itineraryScreen','chatbotScreen'].forEach(s=>document.getElementById(s).style.display='none');
   document.getElementById('homeScreen').style.display='flex';
 }
 
@@ -821,7 +847,7 @@ function calcBudget(){
 }
 
 function showTips(){
-  ['homeScreen','detailScreen','favScreen','budgetScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  ['homeScreen','detailScreen','favScreen','budgetScreen','chatbotScreen'].forEach(s=>document.getElementById(s).style.display='none');
   document.getElementById('tipsScreen').style.display='flex';
   document.getElementById('tipsContent').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -847,6 +873,243 @@ function showTips(){
     `).join('')}
     </div>
   `;
+}
+
+// Chatbot functionality
+const chatHistory=[];
+let itineraryTrips=JSON.parse(localStorage.getItem('bd_trips')||'[]');
+
+// Itinerary management functions
+function showItinerary(){
+  ['homeScreen','detailScreen','favScreen','budgetScreen','tipsScreen','chatbotScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('itineraryScreen').style.display='flex';
+  renderItinerary();
+}
+
+function renderItinerary(){
+  const content=document.getElementById('itineraryContent');
+  if(!itineraryTrips.length){
+    content.innerHTML=`<div style="text-align:center;padding:40px 20px"><div style="font-size:48px;margin-bottom:12px">📋</div><p style="color:#737373;font-size:14px">No trips planned yet.<br>Create one to start organizing your adventure!</p></div>`;
+    return;
+  }
+  content.innerHTML=itineraryTrips.map((trip,idx)=>`
+    <div class="itinerary-card trip-item" style="padding:16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);margin-bottom:12px;animation-delay:${idx*0.1}s">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+        <div style="flex:1">
+          <h3 class="playfair" style="font-size:16px;font-weight:700;color:#f5f5f5;margin:0">${trip.name}</h3>
+          <p style="font-size:12px;color:#a3a3a3;margin:2px 0 0">${trip.startDate} to ${trip.endDate}</p>
+        </div>
+        <button class="delete-btn" onclick="deleteTrip(${idx})" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <i data-lucide="trash-2" style="width:14px;height:14px;color:#ef4444"></i>
+        </button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+        <span class="badge" style="background:rgba(249,115,22,.15);color:#fdba74">${trip.states.length} state${trip.states.length!==1?'s':''}</span>
+        <span class="badge" style="background:rgba(34,197,94,.15);color:#86efac">${trip.days} day${trip.days!==1?'s':''}</span>
+        <span class="badge" style="background:rgba(251,191,36,.15);color:#fbbf24">₹${trip.budget}</span>
+      </div>
+      <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)">
+        <p style="font-size:11px;color:#737373;margin:0;text-transform:uppercase;font-weight:600;margin-bottom:6px">Itinerary</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${trip.states.map((state,i)=>`<span style="font-size:11px;padding:4px 8px;border-radius:6px;background:rgba(249,115,22,.1);color:#fdba74">${i+1}. ${state}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+function deleteTrip(idx){
+  itineraryTrips.splice(idx,1);
+  localStorage.setItem('bd_trips',JSON.stringify(itineraryTrips));
+  renderItinerary();
+}
+
+function openItineraryBuilder(){
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:999;display:flex;align-items:flex-end';
+  modal.id='itineraryModal';
+  modal.innerHTML=`
+    <div style="width:100%;background:#1a1a1a;border-radius:24px 24px 0 0;padding:20px;border:1px solid rgba(255,255,255,.06);max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 class="playfair" style="font-size:18px;font-weight:700;color:#f5f5f5;margin:0">Plan Your Trip</h3>
+        <button onclick="closeItineraryModal()" style="background:rgba(255,255,255,.08);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <i data-lucide="x" style="width:16px;height:16px;color:#f5f5f5"></i>
+        </button>
+      </div>
+      
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:6px;font-weight:600">Trip Name</label>
+          <input id="tripName" type="text" placeholder="e.g., Golden Triangle Tour" style="width:100%;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:13px;font-family:'DM Sans',sans-serif">
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:6px;font-weight:600">Start Date</label>
+            <input id="tripStart" type="date" style="width:100%;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:13px;font-family:'DM Sans',sans-serif">
+          </div>
+          <div>
+            <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:6px;font-weight:600">End Date</label>
+            <input id="tripEnd" type="date" style="width:100%;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:13px;font-family:'DM Sans',sans-serif">
+          </div>
+        </div>
+        
+        <div>
+          <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:6px;font-weight:600">Days (auto-calculated)</label>
+          <div id="tripDaysDisplay" style="padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fdba74;font-size:13px;font-weight:600">0 days</div>
+        </div>
+        
+        <div>
+          <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:8px;font-weight:600">Select States to Visit</label>
+          <div style="max-height:180px;overflow-y:auto;padding:8px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)">
+            ${states.filter(s=>s.budget).map(s=>`
+              <label style="display:flex;align-items:center;gap:8px;padding:8px;cursor:pointer;border-radius:6px;transition:all .2s;color:#d4d4d4;font-size:13px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='transparent'">
+                <input type="checkbox" class="tripState" value="${s.name}" style="width:16px;height:16px;cursor:pointer">
+                <span>${s.emoji} ${s.name}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div>
+          <label style="font-size:12px;color:#a3a3a3;display:block;margin-bottom:6px;font-weight:600">Budget Estimate (₹)</label>
+          <input id="tripBudget" type="number" placeholder="e.g., 50000" style="width:100%;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;font-size:13px;font-family:'DM Sans',sans-serif">
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+          <button onclick="closeItineraryModal()" style="padding:10px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#f5f5f5;cursor:pointer;font-weight:600;font-size:13px">Cancel</button>
+          <button onclick="saveTrip()" style="padding:10px;border-radius:10px;background:#f97316;border:none;color:#fff;cursor:pointer;font-weight:600;font-size:13px">Save Trip</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  document.getElementById('tripStart').addEventListener('change',calcTripDays);
+  document.getElementById('tripEnd').addEventListener('change',calcTripDays);
+  lucide.createIcons();
+}
+
+function calcTripDays(){
+  const start=new Date(document.getElementById('tripStart').value);
+  const end=new Date(document.getElementById('tripEnd').value);
+  if(start&&end&&end>=start){
+    const days=Math.floor((end-start)/(1000*60*60*24))+1;
+    document.getElementById('tripDaysDisplay').textContent=`${days} day${days!==1?'s':''}`;
+  }
+}
+
+function saveTrip(){
+  const name=document.getElementById('tripName').value.trim();
+  const start=document.getElementById('tripStart').value;
+  const end=document.getElementById('tripEnd').value;
+  const budget=document.getElementById('tripBudget').value.trim();
+  const states=[...document.querySelectorAll('.tripState:checked')].map(cb=>cb.value);
+  const days=Math.floor((new Date(end)-new Date(start))/(1000*60*60*24))+1;
+  
+  if(!name||!start||!end||!states.length||!budget){
+    alert('Please fill all fields and select at least one state');
+    return;
+  }
+  
+  itineraryTrips.push({name,startDate:start,endDate:end,days,states,budget});
+  localStorage.setItem('bd_trips',JSON.stringify(itineraryTrips));
+  closeItineraryModal();
+  renderItinerary();
+}
+
+function closeItineraryModal(){
+  const modal=document.getElementById('itineraryModal');
+  if(modal)modal.remove();
+}
+
+const travelResponses={
+  greetings:["Hello! 👋 I'm your AI travel assistant. Ask me about Indian states, travel tips, best times to visit, food recommendations, budget planning, or anything travel-related!","Hi there! 🌍 Ready to explore incredible India? Ask me about any state, activities, or travel hacks!"],
+  budget:["💰 Budget depends on your travel style! Check our Budget Calculator tab for specific states. Generally: Budget ₹500-1200/day, Mid-range ₹2000-3500/day, Luxury ₹7000+/day","Budget in India is very flexible! Homestays cost ₹500-800, street food ₹50-150, hotels ₹1000-3000. Use our Budget tab for state-specific prices!"],
+  best_time:["🗓️ October-March is the best time to visit most of India - cool weather, no monsoons! Some places like Kerala are good year-round.","The shoulder seasons (Sep-Oct, Feb-Mar) offer the sweet spot - good weather, fewer crowds, and reasonable prices!"],
+  crowd:["😊 Peak tourist season is December-February. Want fewer crowds? Visit during June-August (monsoon, but beautiful!). Check our Explore tab for crowd levels!","🟢 Low crowd: Northeast states, Chhattisgarh, Jharkhand | 🟡 Moderate: Karnataka, Telangana | 🔴 High: Goa, Rajasthan, Taj Mahal regions"],
+  food:["🍽️ Indian food is incredibly diverse! Every state has unique cuisines. Check each state's details for food specialties. Street food is safe if busy!","Try local dishes! Dosa in South, Biryani in Hyderabad, Butter Chicken in North - food is an adventure itself!"],
+  permits:["📋 Northeast states (Arunachal Pradesh, Nagaland, Manipur, Mizoram) require Inner Line Permit (ILP). Apply online 2 weeks in advance - it's free!","ILP takes 5-10 days to process. Apply through DigiYatra or official state websites. Some states issue permits on arrival too!"],
+  weather:["🌤️ North India: Hot summers (40-45°C), cold winters (0-15°C). South: Humid year-round. Northeast: Heavy monsoons Jun-Sep. Check each state's weather details!","Best season differs by region: North (Oct-Mar), South (Nov-Feb), Northeast (Oct-May), Hills (Apr-Jun, Sep-Oct)"],
+  transportation:["✈️ For budget travel: Trains are cheapest! IRCTC app for bookings. Buses cost 30-50% less than trains but take longer. Flight deals on MakeMyTrip, GoIbibo during off-seasons.","Pro tip: Travel on Tuesday-Thursday for cheaper flights. Tatkal train tickets release 1 day before. Bus travel is super cheap - perfect for tight budgets!"],
+  health:["💊 Drink only bottled water! Get Hepatitis A vaccine before visiting rural areas. Carry ORS packets, basic meds (antibiotics, antacids). Travel insurance recommended!","Common travel issues: Delhi belly from street food (stay hydrated!), altitude sickness in Himalayas, mosquito-borne illnesses in plains. Prevention is key!"],
+  default:["That's a great question! 😊 For specific info, explore our different states in the app or ask me about travel tips, budgets, best times to visit, or food!","I'm here to help! Try asking about specific states, travel hacks, best seasons, food recommendations, or budget planning. What interests you?"]
+};
+
+function sanitizeInput(text){
+  return text.toLowerCase().trim();
+}
+
+function findBestResponse(input){
+  const sanitized=sanitizeInput(input);
+  
+  if(/hello|hi|hey|namaste|greet/.test(sanitized)) return travelResponses.greetings[Math.floor(Math.random()*travelResponses.greetings.length)];
+  if(/budget|cost|price|afford|cheap|expensive/.test(sanitized)) return travelResponses.budget[Math.floor(Math.random()*travelResponses.budget.length)];
+  if(/best time|when|season|month|weather/.test(sanitized)) return travelResponses.best_time[Math.floor(Math.random()*travelResponses.best_time.length)];
+  if(/crowd|busy|peak|visit|tourist|rush/.test(sanitized)) return travelResponses.crowd[Math.floor(Math.random()*travelResponses.crowd.length)];
+  if(/food|eat|cuisine|dish|restaurant|taste/.test(sanitized)) return travelResponses.food[Math.floor(Math.random()*travelResponses.food.length)];
+  if(/permit|ilp|visa|document|northeast/.test(sanitized)) return travelResponses.permits[Math.floor(Math.random()*travelResponses.permits.length)];
+  if(/weather|temp|rain|snow|hot|cold|monsoon/.test(sanitized)) return travelResponses.weather[Math.floor(Math.random()*travelResponses.weather.length)];
+  if(/train|flight|bus|transport|travel|how to go|reach/.test(sanitized)) return travelResponses.transportation[Math.floor(Math.random()*travelResponses.transportation.length)];
+  if(/health|medical|vaccine|sick|disease|safe/.test(sanitized)) return travelResponses.health[Math.floor(Math.random()*travelResponses.health.length)];
+  
+  // Check for state names
+  for(let s of states){
+    if(sanitized.includes(s.name.toLowerCase())){
+      const parts=[`${s.emoji} ${s.name}: ${s.tagline}`,`Perfect time: ${s.weather.best}`,`Budget: ${s.budget.mid}/day`,`Known for: ${s.culture}`,`Don't miss: ${s.places.slice(0,2).join(', ')}`];
+      return parts.join('\n');
+    }
+  }
+  
+  return travelResponses.default[Math.floor(Math.random()*travelResponses.default.length)];
+}
+
+function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg)return;
+  
+  const chatMessages=document.getElementById('chatMessages');
+  
+  // User message
+  const userDiv=document.createElement('div');
+  userDiv.style.cssText='display:flex;justify-content:flex-end;animation:slideIn .3s ease';
+  userDiv.innerHTML=`<div style="max-width:70%;padding:10px 14px;border-radius:14px;background:#f97316;color:#fff;font-size:13px;line-height:1.4">${msg}</div>`;
+  chatMessages.appendChild(userDiv);
+  
+  input.value='';
+  
+  // Bot typing indicator
+  const typingDiv=document.createElement('div');
+  typingDiv.style.cssText='display:flex;gap:4px;align-items:center;animation:slideIn .3s ease';
+  typingDiv.innerHTML=`<span style="width:8px;height:8px;border-radius:50%;background:#a3a3a3;animation:pulse 1.5s infinite"></span><span style="width:8px;height:8px;border-radius:50%;background:#a3a3a3;animation:pulse 1.5s infinite 0.2s"></span><span style="width:8px;height:8px;border-radius:50%;background:#a3a3a3;animation:pulse 1.5s infinite 0.4s"></span>`;
+  chatMessages.appendChild(typingDiv);
+  chatMessages.scrollTop=chatMessages.scrollHeight;
+  
+  // Simulate response delay
+  setTimeout(()=>{
+    typingDiv.remove();
+    const response=findBestResponse(msg);
+    const botDiv=document.createElement('div');
+    botDiv.style.cssText='display:flex;justify-content:flex-start;animation:slideIn .3s ease';
+    botDiv.innerHTML=`<div style="max-width:70%;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#d4d4d4;font-size:13px;line-height:1.4;white-space:pre-wrap">${response}</div>`;
+    chatMessages.appendChild(botDiv);
+    chatMessages.scrollTop=chatMessages.scrollHeight;
+    
+    lucide.createIcons();
+  },1000+Math.random()*500);
+}
+
+function showChatbot(){
+  ['homeScreen','detailScreen','favScreen','budgetScreen','tipsScreen'].forEach(s=>document.getElementById(s).style.display='none');
+  document.getElementById('chatbotScreen').style.display='flex';
+  if(document.getElementById('chatMessages').children.length===0){
+    const welcome=document.createElement('div');
+    welcome.style.cssText='display:flex;justify-content:flex-start';
+    welcome.innerHTML=`<div style="max-width:80%;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#d4d4d4;font-size:13px;line-height:1.4">👋 Hi! I'm your AI Travel Assistant for India! Ask me about states, best times to visit, budgets, food, permits, transportation, or any travel tips!</div>`;
+    document.getElementById('chatMessages').appendChild(welcome);
+  }
+  document.getElementById('chatInput').focus();
 }
 
 // Init
@@ -912,5 +1175,5 @@ window.elementSdk.init({
 
 lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ebaa40ba71d8c25',t:'MTc3NjA4NTA5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ebb7c1a70c58c25',t:'MTc3NjA5Mzk0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
